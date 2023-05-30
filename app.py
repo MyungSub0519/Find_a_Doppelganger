@@ -1,29 +1,16 @@
 from flask import Flask, render_template, request, redirect
-import pymysql
-from utils.img_preprocessing import img_resize, image_to_binary
+from utils.img_preprocessing import catch_face
 import cv2
+import tensorflow as tf
+import numpy as np
+from tensorflow.keras.models import load_model
+
+test_model = load_model('models\model_siamese_neural_network.h5')
+print(test_model)
 
 app = Flask(__name__)
 
-db = pymysql.connect(host='localhost',
-                    user='root',
-                    password='0000',
-                    db='testdb',
-                    charset='utf8')
-
-cursor = db.cursor()
-
-@app.route('/')
-def test():
-    return render_template('index.html')
-
-@app.route('/test')
-def test_db():
-    cursor.execute("select * from test;")
-    result = list(cursor.fetchall())
-    return result
-
-@app.route('/upload_page', methods=['GET'])
+@app.route('/', methods=['GET'])
 def render_upload_page():
     return render_template('image_upload_test.html')
 
@@ -32,24 +19,31 @@ def upload():
     image = request.files['image']
     image2 = request.files['image2']  
     
-    image.save('static/images/img_01.jpg')
-    image2.save('static/images/img_02.jpg')
+    image_path1 = 'static/images/img_01.jpg'
+    image_path2 = 'static/images/img_02.jpg'
 
-    image = img_resize('static/images/img_01.jpg')
-    image2 = img_resize('static/images/img_02.jpg')
+    image.save(image_path1)
+    image2.save(image_path2)
+    
+    image = cv2.imread(image_path1)
+    image2 = cv2.imread(image_path2)
+    print(image.shape, image2.shape)
 
-    cv2.imwrite('static/images/img_01.jpg', image)
-    cv2.imwrite('static/images/img_02.jpg', image2)
+    image = catch_face(image)
+    image2 = catch_face(image2)
 
-    image = image_to_binary('static/images/img_01.jpg')
-    image2 = image_to_binary('static/images/img_02.jpg')
+    if image is None or image2 is None:
+        return 'Error: face detection failed', 400
 
-    sql = "INSERT INTO testimg(img) VALUES (%s)"
-    cursor.execute(sql, (image,))
-    db.commit()
-    return redirect('/')
+    cv2.imwrite(image_path1, image)
+    cv2.imwrite(image_path2, image2)
+
+    image = np.expand_dims(image, axis=0)  
+    image2 = np.expand_dims(image2, axis=0)  
+
+    result = test_model.predict([image, image2])[0][0]
+
+    return str(result)
 
 if __name__ == '__main__': 
-    app.run(debug=True) 
-
-
+    app.run(debug=True)
