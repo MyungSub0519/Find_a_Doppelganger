@@ -2,6 +2,8 @@ import cv2
 import os
 import mediapipe as mp
 import numpy as np
+from PIL import Image
+
 
 def catch_face(img):
     mp_face_detection = mp.solutions.face_detection
@@ -31,3 +33,13 @@ def catch_face(img):
                         return ValueError
             else :
                 return print('cant find face')
+            
+def is_image(image,image2):
+    try:
+        img1 = Image.open(image)
+        img1.close()
+        img2 = Image.open(image2)
+        img2.close()
+        return False
+    except:
+        return True
