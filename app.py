@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def render_upload_page():
-    return render_template('index.html')
+    return render_template('index.html')        
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -33,7 +33,7 @@ def upload():
     image = np.expand_dims(image, axis=0)  
     image2 = np.expand_dims(image2, axis=0)  
 
-    result = test_model.predict([image, image2])[0][0]
+    result = round(test_model.predict([image, image2])[0][0] * 100)
 
     return render_template('result.html', result=result, image_url='static/images/img_01.jpg', image2_url='static/images/img_02.jpg')
 
