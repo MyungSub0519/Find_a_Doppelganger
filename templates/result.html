@@ -1,14 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Result</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #FAFAFA;
+      color: #333;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      overflow-y: hidden;
+      overflow-x: hidden;
+
+      background-image: url("../static/images/star.gif");
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
+    
+    .container {
+      background-color: white;
+      padding: 50px;
+      border-radius: 20px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.6);
+      width: 80%;
+      margin-top: 50px;
+      position: relative;
+
+      z-index: 3;
+    }
+    .image {
+  position: relative;
+}
+
+.image-container {
+      display: flex;
+      justify-content: space-between; /* 이미지를 좌우로 벌리는 스타일 */
+      margin-bottom: 70px;
+      margin-left: 60px; /* 이미지 간격을 조정하는 스타일 */
+      margin-right: 90px; /* 이미지 간격을 조정하는 스타일 */
+    }    
+    .image-container img {
+      width: 230px;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 20%;
+      margin: 0 20px;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .number-container {
+      background-color: #FAFAFA;
+      width: 200px;
+      height: 200px;
+      line-height: 200px;
+      font-size: 70px;
+      border-radius: 50%;
+      display: inline-block;
+      color: #333;
+      box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+      font-weight: 300;
+    }
+    
+    .text-container {
+      font-size: 40px;
+      font-weight: 700;
+      margin-top: 40px;
+      text-transform: uppercase;
+      color: #333;
+    }
+    footer {
+      padding: 20px;
+      color: #999;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      font-size: 14px;
+    }
+    
+    h1 {
+      margin-top: 20px;
+      color: #333;
+      font-size: 50px;
+      font-weight: 700;
+    }
+    .spotlight {
+  position: absolute;
+  width: 270px;
+  height: 270px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.4);
+  box-shadow: 0px 0px 30px 15px rgba(255, 255, 255, 0.4);
+  animation: spotlight-move 5s linear forwards;
+  mix-blend-mode: overlay;  
+  z-index: 5;
+}
+
+@keyframes spotlight-move {
+  0% { transform: translate(-320px, 0);}
+  16% { transform: translate(-320px,   0);}
+  33% { transform: translate(290px, 0);}
+  50% { transform: translate(290px, 0);}
+  
+  100% {transform: translate(-17px, 0);}
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 4;
+}
+@keyframes spotlight-expand {
+  to {
+    width: 200vw;
+    height: 200vw;
+  }
+}
+@keyframes spotlight-fade-out {
+  0% {
+    opacity: 1;
+    width: 200vw;
+    height: 200vw;
+  }
+  100% {
+    opacity: 0;
+    width: 200vw;
+    height: 200vw;
+  }
+}
+@keyframes overlay-fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+canvas{z-index:10;pointer-events: none;position: fixed;top: 0;transform: scale(1.1);}
+
+  </style>
 </head>
 <body>
-    {{result}}
-    <img src="{{ image_url }}" alt="Image 1">
-    <img src="{{ image2_url }}" alt="Image 2">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script src="confetti_v2.js"></script>
+  
+  <div class="buttonContainer" style="display: none;">
+    <button class="canvasBtn" id="stopButton">Stop Confetti</button>
+    <button class="canvasBtn" id="startButton">Drop Confetti</button>	
+  </div>
+  
+  <canvas id="canvas"></canvas>
+
+  <div class="overlay"></div>
+    <div class="container">
+        <h1 id="head">Result</h1>
+
+        <div class="image-container">
+          <img class="image" id="image1" src="../static/images/img_01.jpg" alt="Left Image">
+          <div class="number-container">42%</div>
+          <img class="image" id="image2" src="../static/images/img_02.jpg" alt="Right Image">
+        </div>
+        
+        <div class="text-container">일치합니다</div>
+    </div>
+
+    <footer>
+      &copy; 2023 Sebuung 
+    </footer>
+
 </body>
+<script>
+  
+
+  
+
+ window.onload = function() {
+  var spotlight = document.createElement('div');
+  spotlight.className = 'spotlight';
+  document.body.appendChild(spotlight);
+
+  // Select the number container
+  var numberContainer = document.querySelector('.number-container');
+
+  // Initialize the number
+  var number = 0;
+
+  // Change the number to a random value every 0.1 seconds
+  var intervalId = setInterval(function() {
+    number = Math.floor(Math.random() * 100);  // Generate a random number between 0 and 99
+    numberContainer.textContent = number + '%';
+  }, 100);  // 100 milliseconds
+  var overlay = document.querySelector('.overlay');
+
+  // After 5 seconds, stop changing the number and set it to 42
+  setTimeout(function() {
+    clearInterval(intervalId);
+    numberContainer.textContent = '92%';
+  }, 5000);  // 5000 milliseconds
+
+  setTimeout(function(){
+    function reAction(){
+  	$("#startButton").trigger("click");
+  	setTimeout(function(){
+  		$("#stopButton").trigger("click");
+  	}, 6000);
+  }  
+  reAction(); 
+  }, 4000)
+
+
+  spotlight.addEventListener('animationend', function() {
+  spotlight.style.animation = 'spotlight-expand 1s forwards';
+    var overlay = document.querySelector('.overlay');
+    overlay.style.animation = 'overlay-fade-out 1s forwards';
+  //티스토리 공감버튼 이벤트
+
+    spotlight.addEventListener('animationend', function(){
+      spotlight.style.animation = 'spotlight-fade-out 1s forwards';
+
+    })
+
+  
+});
+
+
+
+};
+
+    </script>
+    
 </html>
