@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
 from utils.img_preprocessing import catch_face, is_image
 import cv2
 import tensorflow as tf
@@ -42,5 +42,11 @@ def upload():
 
     return render_template('result.html', result=result, image_url='static/images/img_01.jpg', image2_url='static/images/img_02.jpg')
 
+
+
+@app.route('/confetti_v2.js')
+def serve_confetti():
+    return send_from_directory('templates', 'confetti_v2.js')
+
 if __name__ == '__main__': 
-    app.run(debug=True)
+    app.run(host="0.0.0.0",  debug=True)
