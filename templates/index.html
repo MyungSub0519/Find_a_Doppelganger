@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INDEX</title>
+    <title>닮은 꼴 찾기</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
     <style>
@@ -137,19 +137,22 @@
         
         <div class="image-container">
           
-          <div class="image-container-tile">
+          <div class="image-container-tile" id="image1-container">
             <input type="file" name="image" id="image1" style="display: none;">
             <span class="material-symbols-outlined">upload</span>
           </div>
+          
 
           <div class="number-container">
             <button type="submit" class="btn btn-primary">결과확인</button>
           </div>
 
-          <div class="image-container-tile">
+          <div class="image-container-tile" id="image2-container">
             <input type="file" name="image2" id="image2" style="display: none;">
             <span class="material-symbols-outlined">upload</span>
           </div>
+
+          
         
         </div>
       
@@ -159,56 +162,64 @@
     <footer> &copy; 2023 Sebuung </footer>
 
     <script>
-      // Add event listeners to the image-container-tile elements
-      var imageContainers = document.querySelectorAll('.image-container-tile');
-      imageContainers.forEach(function(container) {
+      var imageContainer1 = document.getElementById('image1-container');
+      var imageContainer2 = document.getElementById('image2-container');
+      
+      var containers = [imageContainer1, imageContainer2];
+      var inputs = ['image1', 'image2'];
+      
+      containers.forEach(function(container, index) {
+        var inputId = inputs[index];
+        handleContainer(container, inputId);
+      });
+    
+      function handleContainer(container, inputId) {
         container.addEventListener('click', function() {
-          var inputFile = this.querySelector('input[type="file"]');
+          var inputFile = document.getElementById(inputId);
           inputFile.click();
         });
-        // Adding the drag and drop event listeners to the image-container-tile
+    
         ['dragenter', 'dragover'].forEach(eventName => {
           container.addEventListener(eventName, highlight, false)
         });
+    
         ['dragleave', 'drop'].forEach(eventName => {
           container.addEventListener(eventName, unhighlight, false)
         });
-        container.addEventListener('drop', handleDrop, false);
-      });
-
+    
+        container.addEventListener('drop', handleDrop.bind(null, inputId), false);
+      }
+    
       function highlight(e) {
         e.preventDefault();
         e.currentTarget.classList.add('highlighted');
       }
-
+    
       function unhighlight(e) {
         e.preventDefault();
         e.currentTarget.classList.remove('highlighted');
       }
-
-      function handleDrop(e) {
-        
-        unhighlight(e); // Call unhighlight first to revert styles
-        let files = e.dataTransfer.files;
-        let file = files[0];
-        let imageContainer = e.currentTarget; // Store the image container here
-        let fileInput = document.querySelector('input[type="file"]');
-        
+    
+      function handleDrop(inputId, e) {
+        unhighlight(e);
+        var fileInput = document.getElementById(inputId);
+        var files = e.dataTransfer.files;
+        var file = files[0];
+    
         if (file) {
-          console.log("hi")
           let fileList = new DataTransfer();
           fileList.items.add(file);
           fileInput.files = fileList.files;
           let reader = new FileReader();
           reader.onload = function(e) {
             let image = document.createElement('img');
-            // Remove any existing img child before appending new one
+            let imageContainer = document.getElementById(inputId + '-container');
             let existingImage = imageContainer.querySelector('img');
             if (existingImage) {
               imageContainer.removeChild(existingImage);
             }
             let span = imageContainer.querySelector('span');
-            span.style.display = 'none'; // Hide the span with the upload icon
+            span.style.display = 'none';
             image.src = e.target.result;
             image.style.width = '100%';
             image.style.height = '100%';
@@ -216,37 +227,35 @@
             imageContainer.appendChild(image);
           };
           reader.readAsDataURL(file);
-          console.log(fileInput.files)
         }
       }
+    
       // Show selected image in the corresponding image-container-tile
-    // Show selected image in the corresponding image-container-tile
-var imageContainers = document.querySelectorAll('.image-container-tile');
-imageContainers.forEach(function(container) {
-  var inputFile = container.querySelector('input[type="file"]');
-  inputFile.addEventListener('change', function() {
-    var imageContainer = this.parentNode;
-    var file = this.files[0];
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var image = document.createElement('img');
-      // Remove any existing img child before appending new one
-      var existingImage = imageContainer.querySelector('img');
-      if (existingImage) {
-        imageContainer.removeChild(existingImage);
-      }
-      var span = imageContainer.querySelector('span');
-      span.style.display = 'none'; // Hide the span with the upload icon
-      image.src = e.target.result;
-      image.style.width = '100%';
-      image.style.height = '100%';
-      image.style.objectFit = 'cover';
-      imageContainer.appendChild(image);
-    };
-    reader.readAsDataURL(file);
-  });
-});
-
+      inputs.forEach(function(inputId) {
+        var inputFile = document.getElementById(inputId);
+        inputFile.addEventListener('change', function() {
+          var imageContainer = document.getElementById(inputId + '-container');
+          var file = this.files[0];
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var image = document.createElement('img');
+            var existingImage = imageContainer.querySelector('img');
+            if (existingImage) {
+              imageContainer.removeChild(existingImage);
+            }
+            var span = imageContainer.querySelector('span');
+            span.style.display = 'none';
+            image.src = e.target.result;
+            image.style.width = '100%';
+            image.style.height = '100%';
+            image.style.objectFit = 'cover';
+            imageContainer.appendChild(image);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+    
     </script>
+    
   </body>
 </html>
