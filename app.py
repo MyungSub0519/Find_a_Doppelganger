@@ -7,7 +7,7 @@ from tensorflow.keras.models import load_model
 import re
 import os
 
-test_model = load_model('models\model_siamese_neural_network.h5')
+test_model = load_model('models/model_siamese_neural_network.h5')
 
 app = Flask(__name__)
 
@@ -47,6 +47,10 @@ def upload():
 @app.route('/confetti_v2.js')
 def serve_confetti():
     return send_from_directory('templates', 'confetti_v2.js')
+
+@app.errorhandler(Exception)
+def errorpage(error):
+    return render_template('error.html')
 
 if __name__ == '__main__': 
     app.run(host="0.0.0.0",  debug=True)

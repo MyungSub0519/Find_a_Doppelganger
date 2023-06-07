@@ -22,6 +22,10 @@
         background-image: url("../static/images/star.gif");
         background-repeat: no-repeat;
         background-size: cover;
+        -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none
       }
 
       .container {
@@ -99,6 +103,7 @@
         color: #333;
         font-size: 50px;
         font-weight: 700;
+        margin-bottom: 70px;
       }
 
 
@@ -132,7 +137,7 @@
     <canvas id="canvas"></canvas>
 
     <div class="container">
-      <h1>Upload Img</h1>
+      <h1>우리.. 닮았을까?</h1>
       <form action="/upload" method="post" enctype="multipart/form-data">
         
         <div class="image-container">
@@ -162,6 +167,9 @@
     <footer> &copy; 2023 Sebuung </footer>
 
     <script>
+
+      
+      
       var imageContainer1 = document.getElementById('image1-container');
       var imageContainer2 = document.getElementById('image2-container');
       
