@@ -8,20 +8,7 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
   <style>
 
-@media (max-width: 1200px) {
 
-  .spotlight {
-  position: absolute;
-  width: 270px;
-  height: 270px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.4);
-  box-shadow: 0px 0px 30px 15px rgba(255, 255, 255, 0.4);
-  animation: spotlight-move 5s linear forwards;
-  mix-blend-mode: overlay;  
-  z-index: 5;
-  margin-bottom: 150px;
-}
 @keyframes spotlight-move {
   0% { transform: translate(-320px, 0);}
   16% { transform: translate(-320px,   0);}
@@ -30,42 +17,7 @@
   
   100% {transform: translate(-17px, 0);}
 }
-    .container {
-        width: 90%;
-        padding: 30px;
-    }
-    .image-container {
-        flex-direction: column;
-        align-items: center;
-        
-    }
-    .image-container img {
-        width: 200px;
-        height: 200px;
-        margin: 50px;
-    }
-    .number-container {
-        width: 150px;
-        height: 150px;
-        line-height: 150px;
-        font-size: 60px;
-        margin: 50px;
-    }
-    .text-container {
-        font-size: 30px;
-        margin-top: 30px;
-    }
-    h1 {
-        font-size: 40px;
-    }
-    footer {
-        padding: 10px;
-        font-size: 12px;
-    }
-    body{
-      overflow-y: scroll;
-    }
-}
+ 
 
     body {
       background-color: #FAFAFA;
@@ -169,10 +121,7 @@
   z-index: 5;
 }
 
-@keyframes spotlight-move {
 
-  100% {transform: translate(-17px, 0);}
-}
 .overlay {
   position: fixed;
   top: 0;

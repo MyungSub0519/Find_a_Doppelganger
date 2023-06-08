@@ -24,7 +24,7 @@ def upload():
     image2.save('static/images/img_02.jpg')
 
     if is_image(image,image2):
-        return 'Error: Input file is not img', 400
+        return render_template('error.html', error='Error:you are not input file or file is not img')
     
     image = cv2.imread('static/images/img_01.jpg')
     image2 = cv2.imread('static/images/img_02.jpg')
@@ -33,7 +33,7 @@ def upload():
     image2 = catch_face(image2)
 
     if image is None or image2 is None:
-        return 'Error: face detection failed', 400
+        return render_template('error.html', error="Error: face detection failed")
 
     image = np.expand_dims(image, axis=0)
     image2 = np.expand_dims(image2, axis=0)  
@@ -50,7 +50,7 @@ def serve_confetti():
 
 @app.errorhandler(Exception)
 def errorpage(error):
-    return render_template('error.html')
+    return render_template('error.html', error=error)
 
 if __name__ == '__main__': 
     app.run(host="0.0.0.0",  debug=True)
