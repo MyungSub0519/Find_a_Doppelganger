@@ -9,13 +9,13 @@
 <body>
     <div class="overlay"></div>
     <div class="container">
-    <h1>일시적인 오류입니다 😢</h1>
+    
 
-    <h5>잠시 후에 다시 시도해 주세요.</h5>
+    <h1>{{error_message}}</h1>
 
-    <p>{{error}}</p>
+    <h5>{{error}}</h5>
 
-    <hr/>
+
     <a href="/">처음으로 가기</a>
     </div> <!-- .container -->
 </body>
@@ -51,6 +51,7 @@ body {
     border-radius: 0.9rem;
     box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.6);
     z-index: 6;
+    padding-bottom: 8vh;
 
 }
 .overlay {
@@ -63,18 +64,19 @@ body {
     z-index: 4;
 }
 h1 {
-    font-size: 7vh;
+    font-size: 5vh;
     margin: 0;
 }
 
 h5 {
-    font-size: 3vh;
+    font-size: 2vh;
     
 }
 
 a {
     color: gray;
-    line-height: 10vh;
+    line-height: 5vh;
+    margin-top: 2vh;
 }
 
 hr {
